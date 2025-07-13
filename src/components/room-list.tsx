@@ -28,7 +28,7 @@ export const RoomList = () => {
           {data?.map((room) => {
             return (
               <Link
-                to={`/rooms/${room.id}`}
+                to={`/room/${room.id}`}
                 key={room.id}
                 className="hover:bg-accent/50 flex items-center justify-between rounded-lg border p-3"
               >
