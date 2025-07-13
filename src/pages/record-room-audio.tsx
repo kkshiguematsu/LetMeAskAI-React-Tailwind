@@ -14,7 +14,7 @@ type RoomParams = {
 export function RecordRoomAudio() {
   const [isRecording, setIsRecording] = useState(false)
   const recorder = useRef<MediaRecorder | null>(null)
-  const params = useParams()
+  const params = useParams<RoomParams>()
 
   function stopRecording() {
     setIsRecording(false)
