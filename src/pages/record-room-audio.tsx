@@ -1,14 +1,20 @@
 import { Button } from "@/components/ui/button"
 import { useRef, useState } from "react"
+import { Navigate, useParams } from "react-router-dom"
 
 const isRecordingSupported =
   !!navigator.mediaDevices &&
   typeof navigator.mediaDevices.getUserMedia === "function" &&
   typeof window.MediaRecorder === "function"
 
+type RoomParams = {
+  roomId: string
+}
+
 export function RecordRoomAudio() {
   const [isRecording, setIsRecording] = useState(false)
   const recorder = useRef<MediaRecorder | null>(null)
+  const params = useParams()
 
   function stopRecording() {
     setIsRecording(false)
@@ -41,7 +47,7 @@ export function RecordRoomAudio() {
 
     recorder.current.ondataavailable = (event) => {
       if (event.data.size > 0) {
-        console.log(event.data)
+        uploadAudio(event.data)
       }
     }
 
@@ -54,6 +60,27 @@ export function RecordRoomAudio() {
     }
 
     recorder.current.start()
+  }
+
+  async function uploadAudio(audio: Blob) {
+    const formData = new FormData()
+
+    formData.append("file", audio, "audio.webm")
+
+    const respose = await fetch(
+      `http://localhost:3333/rooms/${params.roomId}/audio`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    )
+
+    const result = await respose.json()
+    console.log(result)
+  }
+
+  if (!params.roomId) {
+    return <Navigate replace to="/" />
   }
 
   return (
