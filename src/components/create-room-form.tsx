@@ -44,6 +44,7 @@ export function CreateRoomForm() {
     description,
   }: CreateRoomFormData) => {
     await createRoom({ name, description })
+    createRoomForm.reset()
   }
 
   return (
